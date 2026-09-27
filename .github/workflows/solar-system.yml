@@ -10,7 +10,7 @@ on:
 env:
   MONGO_URI: "mongodb+srv://supercluster.d83jj.mongodb.net/superData"
   MONGO_USERNAME: "superuser"
-  MONGO_PASSWORD: "${{ secrets.MONGO_PASSWORD }}"
+  MONGO_PASSWORD: "SuperPassword" #"${{ secrets.MONGO_PASSWORD }}"
     
 jobs:
     unit-testing:
@@ -87,6 +87,25 @@ jobs:
            context: .
            push: true
            tags: 'ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}' 
+
+
+    dev-deploy:
+      needs: docker
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout Repo
+          uses: actions/checkout@v4
+
+        - name: Install Kube CLI
+          uses: azure/setup-kubectl@v3
+          with:
+            version: 'v1.26.0'
+
+        - name: Fetch Kubernetes Cluster Details
+          run: |
+            kubectl version --short
+            echo ---------------------------------------------
+            kubectl get nodes
        
             
             
