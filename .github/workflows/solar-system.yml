@@ -83,7 +83,7 @@ jobs:
           uses: actions/checkout@v4
         - name: Lowercase Repository Owner
           id: owner
-          # echo "OWNER=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_OUTPUT
+          # Store the lowercase repository owner in the environment variable OWNER
           run: |
             echo "OWNER=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
         - name: Docker Hub Login
@@ -97,7 +97,7 @@ jobs:
           with:
            context: .
            push: true
-           # ghcr.io/${{ steps.owner.outputs.OWNER }}/github-actions-solar-system:${{ github.sha }}
+           # Use the lowercase repository owner stored in the environment variable OWNER
            tags: |
             ghcr.io/${{ env.OWNER }}/github-actions-solar-system:${{ github.sha }}
 
