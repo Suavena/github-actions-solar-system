@@ -105,6 +105,8 @@ jobs:
     dev-deploy:
       needs: docker
       runs-on: ubuntu-latest
+      environment:
+        name: development
       steps:
         - name: Checkout Repo
           uses: actions/checkout@v4
@@ -119,6 +121,23 @@ jobs:
             kubectl version --short
             echo ---------------------------------------------
             kubectl get nodes
+
+        - name: Install Cluster
+          uses: helm/kind-action@v1
+        - run: |
+            sleep 60
+            kubectl -n kube-system get pod
+            set +e
+            REPO_OWNER_LC="${GITHUB_REPOSITORY_OWNER,,}"
+            kubectl run solar --image ghcr.io/${REPO_OWNER_LC}/github-actions-solar-system:${GITHUB_SHA}
+              --env MONGO_URI=${{ env.MONGO_URI}} \
+              --env MONGO_USERNAME=${{ env.MONGO_USERNAME}} \
+              --env MONGO_PASSWORD=${{ env.MONGO_PASSWORD}}
+            set -e
+            echo "kubectl returned $?"
+            kubectl -n default get pod
+            sleep 10 
+            
        
             
             
