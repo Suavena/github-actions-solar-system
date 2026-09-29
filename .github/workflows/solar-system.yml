@@ -7,6 +7,13 @@ on:
       - main
       - 'feature/*'
 
+ 
+  outputs:
+      ingress-url:
+        description: Provide the Ingress URL
+        required: true
+        type: string
+
 env:
   MONGO_URI: "mongodb+srv://supercluster.d83jj.mongodb.net/superData"
   MONGO_USERNAME: "superuser"
@@ -144,7 +151,7 @@ jobs:
         uses: ./.github/workflows/reusable-workflow.yml
         with:
           ingress-url: '${{ needs.dev-deploy.outputs.APP_INGRESS_URL }}'
-          
+
 
             
        
